@@ -1,10 +1,14 @@
 FROM node:12 as frontend-builder
 
+USER root
+COPY freetds.conf /etc/freetds/
 # Controls whether to build the frontend assets
 ARG skip_frontend_build
 
 ENV CYPRESS_INSTALL_BINARY=0
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+
+
 
 RUN useradd -m -d /frontend redash
 USER redash
@@ -56,6 +60,9 @@ RUN apt-get update && \
     freetds-dev \
     libsasl2-dev \
     unzip \
+    openssh-server \
+    nano \
+    htop \
     libsasl2-modules-gssapi-mit && \
   # MSSQL ODBC Driver:  
   curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
