@@ -1,7 +1,5 @@
 FROM node:12 as frontend-builder
 
-USER root
-COPY freetds.conf /etc/freetds/
 # Controls whether to build the frontend assets
 ARG skip_frontend_build
 
@@ -98,6 +96,9 @@ RUN if [ "x$skip_ds_deps" = "x" ] ; then pip install -r requirements_all_ds.txt 
 COPY . /app
 COPY --from=frontend-builder /frontend/client/dist /app/client/dist
 RUN chown -R redash /app
+
+COPY freetds.conf /etc/freetds/
+
 USER redash
 
 ENTRYPOINT ["/app/bin/docker-entrypoint"]
